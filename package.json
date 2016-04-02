@@ -1,0 +1,21 @@
+{
+  "name": "scatteredfinger",
+  "version": "0.0.0",
+  "description": "a backdoor to jenkins",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/desertedscorpion/scatteredfinger.git"
+  },
+  "keywords": [
+    "jenkins"
+  ],
+  "author": "Emory Merryman",
+  "license": "GNU GPL3",
+  "bugs": {
+    "url": "https://github.com/desertedscorpion/scatteredfinger/issues"
+  }
+}
