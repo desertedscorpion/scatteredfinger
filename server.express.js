@@ -1,17 +1,39 @@
-(function(express, all, open, request, writeFile, exec){
+(function(express, all, open, request, writeFile, exec, Parse, Readable, defer){
     "use strict";
+    var unzip = function(zip){
+	var deferred = defer();
+	var s = new Readable();
+	s.push(zip);
+	s.push(null);
+	s.pipe(Parse()).on("entry", function(entry, error){
+	    if(error){
+		return deferred.reject(error);
+	    }else{
+		return deferred.resolve(entry);
+	    }
+	});
+	return deferred.promise;
+    };
+    var pipe = function(entry,path){
+	var deferred = defer();
+	entry.pipe(createWriteStream(path));
+	deferred.resolve(path);
+	return deferred.promise;
+    };
     return all([
-	request("http://www.java2s.com/Code/JarDownload/localizer/localizer-1.9.jar.zip"),
-	request("http://central.maven.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.jar")
-    ]).then(function(files){
-	return all(files.map(function(file){
+	request("http://www.java2s.com/Code/JarDownload/localizer/localizer-1.9.jar.zip").then(function(localizer){
+	    return unzip(localizer).then(function(entry){
+		return open("temp").then(function(temp){
+		    return pipe(entry,temp.path);
+	    });
+	}),
+	request("http://central.maven.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.jar").then(function(codec){
 	    return open("temp").then(function(temp){
-		return writeFile(temp.path,file).then(function(success){
-		    console.log(temp.path)
+		return writeFile(codec,temp.path).then(function(){
 		    return temp.path;
 		});
 	    });
-	}));
+	})
     }).then(function(fileNames){
 	return fileNames.map(function(fileName){
 	    return console.log(fileName);
@@ -39,5 +61,8 @@
     require("promise-temp").open,
     require("request-promise"),
     require("fs-promise").writeFile,
-    require("child-process-promise").exec)
-);
+    require("child-process-promise").exec,
+    require("unzip").Parse,
+    require("").Readable,
+    require("q").defer
+));
