@@ -19,6 +19,8 @@
     "url": "https://github.com/desertedscorpion/scatteredfinger/issues"
   },
   "devDependencies": {
-    "express": "~4.13.4"
+    "express": "~4.13.4",
+    "child-process-promise": "~1.1.0",
+    "promise-temp": "~0.1.0"
   }
 }
