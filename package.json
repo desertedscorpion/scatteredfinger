@@ -17,5 +17,8 @@
   "license": "GNU GPL3",
   "bugs": {
     "url": "https://github.com/desertedscorpion/scatteredfinger/issues"
+  },
+  "devDependencies": {
+    "express": "~4.13.4"
   }
 }
