@@ -1,7 +1,8 @@
-(function(express, all, open, request, writeFile, exec, Parse, Readable, defer){
+(function(express, all, open, request, writeFile, exec, Parse, Readable, defer, createWriteStream){
     "use strict";
     var unzip = function(zip){
 	var deferred = defer();
+	/*
 	var s = new Readable();
 	s.push(zip);
 	s.push(null);
@@ -10,6 +11,11 @@
 		return deferred.reject(error);
 	    }else{
 		return deferred.resolve(entry);
+	    }
+	});
+	*/
+	deferred.resolve({
+	    pipe: function(){
 	    }
 	});
 	return deferred.promise;
@@ -25,6 +31,7 @@
 	    return unzip(localizer).then(function(entry){
 		return open("temp").then(function(temp){
 		    return pipe(entry,temp.path);
+		});
 	    });
 	}),
 	request("http://central.maven.org/maven2/commons-codec/commons-codec/1.9/commons-codec-1.9.jar").then(function(codec){
@@ -34,24 +41,24 @@
 		});
 	    });
 	})
-    }).then(function(fileNames){
+    ]).then(function(fileNames){
 	return fileNames.map(function(fileName){
 	    return console.log(fileName);
 	});
 	/*
-	return express()
-	    .get("/rest/api/0/status/health", function(request, response){
-		return response.json({
+	  return express()
+	  .get("/rest/api/0/status/health", function(request, response){
+	  return response.json({
 		    status: "OK"
-		});
-	    })
+		    });
+		    })
 	    .get("/rest/api/0/jenkins/help", function(request, response){
-		return exec().then(function(success){
-		}, function(rageguy){
-		});
+	    return exec().then(function(success){
+	    }, function(rageguy){
+	    });
 	    })
 	    .listen(28494)
-	;
+	    ;
 	*/
     }, function(rageguy){
     });
@@ -63,6 +70,7 @@
     require("fs-promise").writeFile,
     require("child-process-promise").exec,
     require("unzip").Parse,
-    require("").Readable,
-    require("q").defer
+    require("stream").Readable,
+    require("q").defer,
+    require("fs-promise").createWriteStream
 ));
