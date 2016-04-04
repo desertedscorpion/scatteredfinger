@@ -15,8 +15,10 @@
 	    return spawn("curl", ["--output", zipFile.path, "http://www.java2s.com/Code/JarDownload/localizer/localizer-1.9.jar.zip"]).then(function(){
 		return mkdir("").then(function(directory){
 		    return spawn("unzip", ["-d", directory, zipFile.path]).then(function(){
-			return readdir(directory).map(function(file){
-			    return join(directory,file);
+			return readdir(directory).then(function(files){
+			    return all(files.map(function(file){
+				return join(directory,file);
+			    }));
 			});
 		    });
 		});
